@@ -33,11 +33,10 @@ source devel/setup.bash
 ### Step5: Setting up a UR robot for ur_robot_driver
 For using the *ur_robot_driver* with a real robot you need to install the
 **externalcontrol-1.0.4.urcap** which can be found inside the **resources** folder of [UR_Robot_Driver](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver).
-**Note**: For installing this URCap a minimal PolyScope version of 3.7 or 5.1 (in case of e-Series) is
-necessary.
 
-For installing the necessary URCap and creating a program, please see the individual tutorials on
-how to [setup a CB3 robot](ur_robot_driver/doc/install_urcap_cb3.md).
+**Note**: For installing this URCap a minimal PolyScope version of 3.7 or 5.1 (in case of e-Series) is
+necessary. For installing the necessary URCap and creating a program, please see the individual tutorials on
+how to [setup a CB3 robot](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/ur_robot_driver/doc/install_urcap_cb3.md).
 
 ### Step6: Prepare the ROS PC
 For using the driver make sure it is installed (either by the debian package or built from source
@@ -76,56 +75,50 @@ If you calibrated your robot before, pass that calibration to the launch file:
 
 If the parameters in that file don't match the ones reported from the robot, the driver will output
 an error during startup, but will remain usable.
-
 For more information on the launch file's parameters see its own documentation.
 
-
-🔴**IMPORTANT NOTE1**🔴 
-
-Once the robot driver is started, load the [previously generated program](### Step5: Setting up a UR robot for ur_robot_driver) and you should have 
-a program running on the teach pendante now like one shown at the bottom of this page: [setup a CB3 robot](ur_robot_driver/doc/install_urcap_cb3.md) 
+### Step8: Launch the driver
+Once the robot driver is started, load the previous program on the teach pendante as illustrated here this page: [setup a CB3 robot](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/ur_robot_driver/doc/install_urcap_cb3.md)
 on the robot panel that will start the *External Control* program node and execute it.
+From that moment on the robot is fully functional. 
 
-From that moment on
-the robot is fully functional. 
-
-🔴**IMPORTANT NOTE2**🔴 
+### Step9: Press to test the connection
 
 After launch the driver. Press *Stop* (:stop_button:) and the *Play* button (:arrow_forward:) and the ROS driver will reconnect.
 Inside the ROS terminal running the driver you should see the output **Robot ready to receive control commands.** 
 Otherwise, you are not connected the controller.
 
-🔴**IMPORTANT NOTE3**🔴 
+### Step9: Use the correct action server
+
 To control the robot using ROS, use the action server on
 
 ```bash
 /scaled_pos_joint_traj_controller/follow_joint_trajectory
 ```
 
-Use this with any client interface such as [MoveIt!](https://moveit.ros.org/) or simply the
-`rqt_joint_trajectory_controller` gui:
+### Step 10: You can tested it simply by using ```rqt_joint_trajectory_controller``` first
 
 ```
+sudo apt-get install ros-melodic-rqt-joint-trajectory-controller
+
 rosrun rqt_joint_trajectory_controller rqt_joint_trajectory_controller
 ```
 
-
-You can tested it simply by using ```rqt_joint_trajectory_controller``` first
-
-If not installed: ```sudo apt-get install ros-melodic-rqt-joint-trajectory-controller```
-
-### 2. install moveit
-### 3. 
-
-**bold** 
-
-#### Troubleshooting
+**Troubleshooting**
 Error | Solution
 ------------ | -------------
 rqt_joint_trajectory_controller() found no plugin matching ‘xxx' | rm ~/.config/ros.org.rqt_gui.ini
 
-```diff
-+ this text is highlighted in green
-- this text is highlighted in red
-```
+
+
+### 2. Use it in Moveit
+
+
+### 3. Calibration
+
+#### Camera calibration
+#### Hand-eye calibration
+
+
+
 
