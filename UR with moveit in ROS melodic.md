@@ -130,7 +130,7 @@ rqt_joint_trajectory_controller() found no plugin matching ‘xxx' | rm ~/.confi
 
 
 
-### 2. Use it in Moveit
+## 2. Use it in Moveit
 ### Step 1: Install Moveit
 ```sudo apt-get install ros-melodic-moveit```
 
@@ -203,7 +203,7 @@ Some possible reasons are:
 2. Action server is not correct (Follow the setup in 2. Use it in Moveit )
 ```
 
-### 3. Calibration
+## 3. Calibration
 
 #### Camera calibration
 
