@@ -144,12 +144,14 @@ roslaunch ur5_moveit_config execution_real.launch
 
 However, this will not work. You need to modify some arguments in the launch file first.
 I follow this [link](https://www.it610.com/article/1296087580391055360.htm) to modify the files.
+
 Inside **execution_real.launch**:
 ```
   <include file="$(find ur5_robotiq140_real_moveit_config)/launch/move_group.launch">
     <arg name="allow_trajectory_execution" value="true"/>
     <arg name="fake_execution" value="false"/>  
  ```
+ 
  And in the same file, comment node ```joint_state_publisher``` and ```robot_state_publisher```.
  Otherwise, those two will crash with the real UR state publisher.
  ```
@@ -158,7 +160,7 @@ Inside **execution_real.launch**:
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
  ```
  
-Then, inside ```moveit_controller_manager```:
+Then, inside **moveit_controller_manager**:
 ```
 <launch>
   <arg name="moveit_controller_manager" default="moveit_simple_controller_manager/MoveItSimpleControllerManager" />
@@ -170,8 +172,8 @@ Then, inside ```moveit_controller_manager```:
 </launch>
 ```
 
-**And most importantly!** 
-Change the ```controller yaml file``` (under ```config``` folder) to below:
+***And most importantly!*** 
+Change the **controller.yaml** (under ```config``` folder) to below:
 ```
  controller_list:
   - name: ""
