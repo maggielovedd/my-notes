@@ -1,5 +1,6 @@
 # Setup UR with UR driver and use it in moveit
-Specification:
+
+This doc may only apply to the specification below:
 * Ubuntu 18.04 
 * ROS melodic
 * UR CB3 (with software version >= 3.7) or e-Series (software >= 5.1)  (The one I'm using is CB3 3.11)
@@ -9,28 +10,33 @@ Download [UR_Robot_Driver](https://github.com/UniversalRobots/Universal_Robots_R
 
 The simplified instruction is copied here, please use the link for detail.
 
-### Step1: clone the driver  
-
-```git clone https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git```
-
-### Step2: clone fork of the description. 
-
-```git clone -b calibration_devel https://github.com/fmauch/universal_robot.git```
-
-### Step3: install dependencies
+### Step 1: clone and build the driver  
 ```
-sudo apt update -qq
-rosdep update
-rosdep install --from-paths src --ignore-src -y
-```
-### Step4: build the workspace. 
-We need an **isolated build** because of the non-catkin library package  
-```
-catkin_make
-source devel/setup.bash
+# source global ros
+$ source /opt/ros/<your_ros_version>/setup.bash
+
+# create a catkin workspace
+$ mkdir -p catkin_ws/src && cd catkin_ws
+
+# clone the driver
+$ git clone https://github.com/UniversalRobots/Universal_Robots_ROS_Driver.git src/Universal_Robots_ROS_Driver
+
+# clone fork of the description. This is currently necessary, until the changes are merged upstream.
+$ git clone -b calibration_devel https://github.com/fmauch/universal_robot.git src/fmauch_universal_robot
+
+# install dependencies
+$ sudo apt update -qq
+$ rosdep update
+$ rosdep install --from-paths src --ignore-src -y
+
+# build the workspace. We need an isolated build because of the non-catkin library package.
+$ catkin_make
+
+# activate the workspace (ie: source it)
+$ source devel/setup.bash
 ```
 
-### Step5: Setting up a UR robot for ur_robot_driver
+### Step 2: Setting up a UR robot for ur_robot_driver
 For using the *ur_robot_driver* with a real robot you need to install the
 **externalcontrol-1.0.4.urcap** which can be found inside the **resources** folder of [UR_Robot_Driver](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver).
 
@@ -49,11 +55,11 @@ Host(PC's IP for external control):
 IP:192.168.0.3
 ```
 
-### Step6: Prepare the ROS PC
+### Step 3: Prepare the ROS PC
 For using the driver make sure it is installed (either by the debian package or built from source
 inside a catkin workspace).
 
-### Step7: Extract calibration information
+### Step 4: Extract calibration information
 Each UR robot is calibrated inside the factory giving exact forward and inverse kinematics. To also
 make use of this in ROS, you first have to extract the calibration information from the robot.
 
@@ -67,7 +73,7 @@ For the parameter `robot_ip` insert the IP address on which the ROS pc can reach
 We recommend keeping calibrations for all robots in your organization in a common package. See the
 [package's documentation](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/ur_calibration/README.md) for details.
 
-### Step8: Launch the driver
+### Step 5: Launch the driver
 Once the driver is built and the **externalcontrol** URCap is installed on the
 robot, you are good to go ahead starting the driver. (**Note**: We do recommend, though, to extract your robot's
 calibration first.)
@@ -88,24 +94,29 @@ If the parameters in that file don't match the ones reported from the robot, the
 an error during startup, but will remain usable.
 For more information on the launch file's parameters see its own documentation.
 
-### Step9: Launch the driver
+### Step 6: Launch the driver
 Once the robot driver is started, load the previous program on the teach pendante as illustrated here this page: [setup a CB3 robot](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/ur_robot_driver/doc/install_urcap_cb3.md)
 on the robot panel that will start the *External Control* program node and execute it.
 From that moment on the robot is fully functional. 
 
-### Step10: Press to test the connection
+### Step 7: Press to test the connection
 
 After launch the driver. Press *Stop* (:stop_button:) and the *Play* button (:arrow_forward:) and the ROS driver will reconnect.
 Inside the ROS terminal running the driver you should see the output ```Robot ready to receive control commands.```
 Otherwise, you are not connected the controller.
 
-### Step11: You can tested the connection simply by using ```rqt_joint_trajectory_controller``` first
+### Step 9: Install other packages for control
+```
+sudo apt-get install ros-melodic-ros-control ros-melodic-ros-controllers
+```
+
+### Step 8: You can tested the connection simply by using ```rqt_joint_trajectory_controller``` first
 ```
 sudo apt-get install ros-melodic-rqt-joint-trajectory-controller
 rosrun rqt_joint_trajectory_controller rqt_joint_trajectory_controller
 ```
-In the controller manager, remember to use the correct action server
 
+In the controller manager, remember to use the correct action server
 ```bash
 /scaled_pos_joint_traj_controller/follow_joint_trajectory
 ```
@@ -118,7 +129,7 @@ rqt_joint_trajectory_controller() found no plugin matching ‘xxx' | rm ~/.confi
 
 
 ### 2. Use it in Moveit
-Step1: Install Moveit
+### Step 1: Install Moveit
 ```sudo apt-get install ros-melodic-moveit```
 
 However! The default moveit config will not work, you should modify it.
@@ -128,12 +139,14 @@ And most importtantly!
     <arg name="allow_trajectory_execution" value="true"/>
     <arg name="fake_execution" value="false"/>
  ```
+ 
  **Troubleshooting**
  1. [ERROR]: Unable to identify any set of controllers that can actuate the specified joints: [ elbow_joint shoulder_lift_joint shoulder_pan_joint wrist_1_joint wrist_2_joint wrist_3_joint ] 
 ```
 Some possible reasons are: 
-1. you did not connect to the action server 
-2. you 
+1. ROS driver is not really connected (check **Step 7: Press to test the connection** in 1. install UR driver) / 
+2. Action server is not correct (Follow the setup in 2. Use it in Moveit )
+
 ```
 
 ### 3. Calibration
