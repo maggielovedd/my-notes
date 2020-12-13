@@ -1,9 +1,10 @@
-# Setup UR with UR driver and use it in moveit
+# Setup UR with UR driver and control it by moveit
 
 This doc may only apply to the specification below:
 * Ubuntu 18.04 
 * ROS melodic
 * UR CB3 (with software version >= 3.7) or e-Series (software >= 5.1)  (The one I'm using is CB3 3.11)
+* UR5
 
 ## 1. install UR driver
 Download [UR_Robot_Driver](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver).
@@ -110,13 +111,14 @@ Otherwise, you are not connected the controller.
 sudo apt-get install ros-melodic-ros-control ros-melodic-ros-controllers
 ```
 
-### Step 8: You can tested the connection simply by using ```rqt_joint_trajectory_controller``` first
+### Step 8: Test the connection
+Test it simply by using ```rqt_joint_trajectory_controller``` first
 ```
 sudo apt-get install ros-melodic-rqt-joint-trajectory-controller
 rosrun rqt_joint_trajectory_controller rqt_joint_trajectory_controller
 ```
 
-In the controller manager, remember to use the correct action server
+In the controller manager, remember to select the correct action server
 ```bash
 /scaled_pos_joint_traj_controller/follow_joint_trajectory
 ```
@@ -132,26 +134,79 @@ rqt_joint_trajectory_controller() found no plugin matching ‘xxx' | rm ~/.confi
 ### Step 1: Install Moveit
 ```sudo apt-get install ros-melodic-moveit```
 
-However! The default moveit config will not work, you should modify it.
-Follow this [link](https://www.it610.com/article/1296087580391055360.htm) to modify the files.
-And most importtantly! 
+### Step 2: Run moveit
 ```
+roslaunch ur5_moveit_config execution_real.launch 
+```
+
+However, this will not work. You need to modify some arguments in the launch file first.
+I follow this [link](https://www.it610.com/article/1296087580391055360.htm) to modify the files.
+Inside **execution_real.launch**:
+```
+  <include file="$(find ur5_robotiq140_real_moveit_config)/launch/move_group.launch">
     <arg name="allow_trajectory_execution" value="true"/>
-    <arg name="fake_execution" value="false"/>
+    <arg name="fake_execution" value="false"/>  
  ```
  
+ And in the same file, comment node ```joint_state_publisher``` and ```robot_state_publisher```.
+ Otherwise, those two will crash with the real UR state publisher.
+ ```
+ Coomment this node:
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+   <param name="use_gui" value="$(arg use_gui)"/>
+   
+   
+   <rosparam param="/source_list">[/joint_states]rosparam>
+ node>
+ ```
+ 
+Then, inside ```moveit_controller_manager```:
+```
+<launch>
+  <arg name="moveit_controller_manager" default="moveit_simple_controller_manager/MoveItSimpleControllerManager" />
+  <param name="moveit_controller_manager" value="$(arg moveit_controller_manager)"/>
+  <arg name="use_controller_manager" default="true" />
+  <param name="use_controller_manager" value="$(arg use_controller_manager)" />
+  <param name="trajectory_execution/execution_duration_monitoring" value="true"/>
+  <rosparam file="$(find ur5_moveit_config)/config/controllers.yaml"/>
+</launch>
+```
+
+**And most importantly!** 
+Change the ```controller yaml file``` (under ```config``` folder) to below:
+```
+ controller_list:
+  - name: ""
+    action_ns: scaled_pos_joint_traj_controller/follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+       - shoulder_pan_joint
+       - shoulder_lift_joint
+       - elbow_joint
+       - wrist_1_joint
+       - wrist_2_joint
+       - wrist_3_joint
+ ```
+ Originally, the ```action_ns``` is ```follow_joint_trajectory``` which can not be found by moveit, change it to ```/scaled_pos_joint_traj_controller/follow_joint_trajectory```
+ 
+ ### Step 3: Rerun moveit
+ ```
+roslaunch ur5_moveit_config execution_real.launch 
+```
+
  **Troubleshooting**
  1. [ERROR]: Unable to identify any set of controllers that can actuate the specified joints: [ elbow_joint shoulder_lift_joint shoulder_pan_joint wrist_1_joint wrist_2_joint wrist_3_joint ] 
 ```
 Some possible reasons are: 
 1. ROS driver is not really connected (check **Step 7: Press to test the connection** in 1. install UR driver) / 
 2. Action server is not correct (Follow the setup in 2. Use it in Moveit )
-
 ```
 
 ### 3. Calibration
 
 #### Camera calibration
+
 #### Hand-eye calibration
 
 
