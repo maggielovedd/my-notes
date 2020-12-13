@@ -199,7 +199,7 @@ roslaunch ur5_moveit_config execution_real.launch
  1. [ERROR]: Unable to identify any set of controllers that can actuate the specified joints: [ elbow_joint shoulder_lift_joint shoulder_pan_joint wrist_1_joint wrist_2_joint wrist_3_joint ] 
 ```
 Some possible reasons are: 
-1. ROS driver is not really connected (check **Step 7: Press to test the connection** in 1. install UR driver) / 
+1. ROS driver is not really connected (check **Step 7: Press to test the connection** in 1. install UR driver)
 2. Action server is not correct (Follow the setup in 2. Use it in Moveit )
 ```
 
