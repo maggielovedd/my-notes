@@ -108,7 +108,7 @@ Otherwise, you are not connected the controller.
 
 ### Step 9: Install other packages for control
 ```
-sudo apt-get install ros-melodic-ros-control ros-melodic-ros-controllers
+sudo apt-get install ros-melodic-ros-control ros-melodic-ros-controllers  ros-melodic-ur-kinematics
 ```
 
 ### Step 8: Test the connection
@@ -131,8 +131,11 @@ rqt_joint_trajectory_controller() found no plugin matching ‘xxx' | rm ~/.confi
 
 
 ## 2. Use it in Moveit
-### Step 1: Install Moveit
-```sudo apt-get install ros-melodic-moveit```
+### Step 1: Install [Moveit](http://docs.ros.org/en/melodic/api/moveit_tutorials/html/doc/getting_started/getting_started.html)
+```
+sudo apt-get install ros-melodic-catkin python-catkin-tools
+sudo apt-get install ros-melodic-moveit
+```
 
 ### Step 2: Run moveit
 ```
@@ -147,17 +150,12 @@ Inside **execution_real.launch**:
     <arg name="allow_trajectory_execution" value="true"/>
     <arg name="fake_execution" value="false"/>  
  ```
- 
  And in the same file, comment node ```joint_state_publisher``` and ```robot_state_publisher```.
  Otherwise, those two will crash with the real UR state publisher.
  ```
- Coomment this node:
+ Coomment these nodes:
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-   <param name="use_gui" value="$(arg use_gui)"/>
-   
-   
-   <rosparam param="/source_list">[/joint_states]rosparam>
- node>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
  ```
  
 Then, inside ```moveit_controller_manager```:
@@ -208,6 +206,8 @@ Some possible reasons are:
 #### Camera calibration
 
 #### Hand-eye calibration
+
+[Hand-eye calibration](https://github.com/IFL-CAMP/easy_handeye)
 
 
 
