@@ -1,15 +1,14 @@
 # Setup UR with UR driver and control it by moveit
 
-This doc may only apply to the specification below:
+This doc records how I setup UR anbd control it by Moveit in ROS and it may only apply to the specification below:
 * Ubuntu 18.04 
 * ROS melodic
-* UR CB3 (with software version >= 3.7) or e-Series (software >= 5.1)  (The one I'm using is CB3 3.11)
 * UR5
+* UR CB3 (with software version >= 3.7) or e-Series (software >= 5.1)  (The one I'm using is CB3 3.11)
 
 ## 1. install UR driver
-Download [UR_Robot_Driver](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver).
 
-The simplified instruction is copied here, please use the link for detail.
+The simplified instruction is copied here, please check [UR_Robot_Driver](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver) for detail.
 
 ### Step 1: clone and build the driver  
 ```
@@ -43,7 +42,7 @@ For using the *ur_robot_driver* with a real robot you need to install the
 
 **Note**: For installing this URCap a minimal PolyScope version of 3.7 or 5.1 (in case of e-Series) is
 necessary. For installing the necessary URCap and creating a program, please see the individual tutorials on
-how to [setup a CB3 robot](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/ur_robot_driver/doc/install_urcap_cb3.md).
+how to [setup a CB3 robot](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/blob/master/ur_robot_driver/doc/install_urcap_cb3.md).
 
 For my UR Network setup:
 ```
@@ -72,7 +71,7 @@ For this, there exists a helper script:
 For the parameter `robot_ip` insert the IP address on which the ROS pc can reach the robot. As
 `target_filename` provide an absolute path where the result will be saved to.
 We recommend keeping calibrations for all robots in your organization in a common package. See the
-[package's documentation](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/ur_calibration/README.md) for details.
+[package's documentation](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/blob/master/ur_calibration/README.md) for details.
 
 ### Step 5: Launch the driver
 Once the driver is built and the **externalcontrol** URCap is installed on the
@@ -96,7 +95,7 @@ an error during startup, but will remain usable.
 For more information on the launch file's parameters see its own documentation.
 
 ### Step 6: Launch the driver
-Once the robot driver is started, load the previous program on the teach pendante as illustrated here this page: [setup a CB3 robot](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/ur_robot_driver/doc/install_urcap_cb3.md)
+Once the robot driver is started, load the previous program on the teach pendante as illustrated here this page: [setup a CB3 robot](https://github.com/UniversalRobots/Universal_Robots_ROS_Driver/blob/master/ur_robot_driver/doc/install_urcap_cb3.md)
 on the robot panel that will start the *External Control* program node and execute it.
 From that moment on the robot is fully functional. 
 
