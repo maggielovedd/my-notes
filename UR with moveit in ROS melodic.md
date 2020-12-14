@@ -107,7 +107,7 @@ Otherwise, you are not connected the controller.
 
 ### Step 9: Install other packages for control
 ```
-sudo apt-get install ros-melodic-ros-control ros-melodic-ros-controllers  ros-melodic-ur-kinematics
+sudo apt-get install ros-melodic-ros-control ros-melodic-ros-controllers
 ```
 
 ### Step 8: Test the connection
