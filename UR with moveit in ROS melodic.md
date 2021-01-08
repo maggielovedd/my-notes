@@ -121,6 +121,20 @@ In the controller manager, remember to select the correct action server
 ```bash
 /scaled_pos_joint_traj_controller/follow_joint_trajectory
 ```
+```
+controller_list:
+  - name: ""
+    action_ns: scaled_pos_joint_traj_controller/follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+       - shoulder_pan_joint
+       - shoulder_lift_joint
+       - elbow_joint
+       - wrist_1_joint
+       - wrist_2_joint
+       - wrist_3_joint
+```
 
 **Troubleshooting**
 Error | Solution
